@@ -45,7 +45,7 @@ jobs:
       - name: calidad-codigo
         run: |
           mvn sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.qualitygate.wait=true -Dsonar.login=admin -Dsonar.password=admin
-  
+
   stage:
     needs: qa
     runs-on: ubuntu-latest
@@ -59,13 +59,12 @@ jobs:
       - name: Desplegar en Azure
         uses: Azure/webapps-deploy@v2
         with:
-          app-name: pre-baloncesto1-omar
+          app-name: pre-bqloncesto1-omar
           publish-profile: ${{ secrets.PRE_AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: target/*.war
 
-
   deploy:
-    needs: qa
+    needs: stage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
