@@ -1,5 +1,9 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModeloDatos {
 
@@ -89,6 +93,20 @@ public class ModeloDatos {
             // No modifica la tabla
             logger.info("Error al resetear votos: " + e.getMessage());
         }
+    }
+
+    public List<Jugador> getJugadores() {
+        List<Jugador> jugadores = new ArrayList<>();
+        try {
+            set = con.createStatement();
+            rs = set.executeQuery("SELECT * FROM Jugadores");
+            while (rs.next()) {
+                jugadores.add(new Jugador(rs.getInt("id"), rs.getString("nombre"), rs.getInt("votos")));
+            }
+        } catch (Exception e) {
+            logger.info("Error al obtener jugadores: " + e.getMessage());
+        }
+        return jugadores;
     }
 
     public void cerrarConexion() {

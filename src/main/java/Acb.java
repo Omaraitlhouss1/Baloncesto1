@@ -1,9 +1,13 @@
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Acb extends HttpServlet {
 
@@ -26,6 +30,23 @@ public class Acb extends HttpServlet {
             res.addCookie(mensajeCookie);
 
             res.sendRedirect("index.html"); // Redirige de vuelta a la página principal.
+            return; // Finaliza la ejecución para no procesar más código.
+        }
+
+        if (req.getParameter("verVotos") != null) {
+            List<String> nombres = new ArrayList<>();
+            List<Integer> votos = new ArrayList<>();
+            List<Jugador> datosJugadores = bd.getJugadores();
+
+            for (Jugador jugador : datosJugadores) {
+                nombres.add(jugador.getNombre());
+                votos.add(jugador.getVotos());
+            }
+
+            s.setAttribute("nombres", nombres);
+            s.setAttribute("votos", votos);
+
+            res.sendRedirect("VerVotos.jsp"); // Redirige a la página correspondiente para ver los votos.
             return; // Finaliza la ejecución para no procesar más código.
         }
 
