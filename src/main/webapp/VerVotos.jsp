@@ -7,7 +7,7 @@
 </head>
 <body class="verVotos">
     <h1>Votos de los jugadores</h1>
-    <table>
+    <table id="tablaDeVotos">
         <tr>
             <th>Nombre del jugador</th>
             <th>N&uacute;mero de votos</th>
