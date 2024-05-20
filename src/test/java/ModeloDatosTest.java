@@ -19,7 +19,9 @@ public class ModeloDatosTest {
     }
 
     @Test
-    public void testActualizarJugadorIncrementaVotos() throws Exception {
+    public void testActualizarJugador() throws Exception {
+        System.out.println("Prueba de actualizarJugador");
+
         // Simular las dependencias de la base de datos
         Connection mockConnection = mock(Connection.class);
         Statement mockStatement = mock(Statement.class);
@@ -35,14 +37,14 @@ public class ModeloDatosTest {
 
         instance.abrirConexion(); // Se llama al método sobreescrito que establece la conexión simulada
 
-        String nombreJugador = "JugadorPrueba";
+        String nombreJugador = "Rudy";
         // Ejecutar el método a probar
         instance.actualizarJugador(nombreJugador);
 
         // Verificar que el método executeUpdate fue llamado con la consulta SQL
         // esperada
         verify(mockStatement, times(1))
-                .executeUpdate("UPDATE Jugadores SET votos=votos+1 WHERE nombre LIKE '%" + nombreJugador + "%'");
+                .executeUpdate("UPDATE Jugadores SET votos=votos+1 WHERE nombre " + " LIKE '%" + nombreJugador + "%'");
 
         // Limpiar el estado de la conexión simulada
         instance.cerrarConexion();
