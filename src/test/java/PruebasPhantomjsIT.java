@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PruebasPhantomjsIT {
     private static WebDriver driver = null;
@@ -79,6 +80,48 @@ public class PruebasPhantomjsIT {
             }
         }
         assertEquals(true, result, "Los votos no se resetean correctamente");
+        driver.close();
+        driver.quit();
+    }
+
+    @Test
+    public void comprobarVotoNuevoJugador() {
+
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setJavascriptEnabled(true);
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/bin/phantomjs");
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS,
+                new String[] { "--web-security=no", "--ignore-ssl-errors=yes" });
+        driver = new PhantomJSDriver(caps);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        // Navegamos a la pagina
+        driver.navigate().to("http://localhost:8080/Baloncesto/");
+        // Esperamos un maximo de 10 segundos a que cargue la pagina
+        wait.until(ExpectedConditions.titleContains("Votacion mejor jugador liga ACB"));
+
+        // Introduce el nombre de un nuevo jugador y selecciona "Otros"
+        driver.findElement(By.name("txtOtros")).sendKeys("JugadorPrueba");
+        driver.findElement(By.id("radioOtros")).click();
+
+        // Envía el formulario votando por el nuevo jugador
+        driver.findElement(By.name("B1")).click();
+
+        // Esperamos un maximo de 10 segundos a que cargue la pagina
+        wait.until(ExpectedConditions.titleContains("Votación mejor jugador liga ACB"));
+        // Volvemos a la página principal
+        driver.findElement(By.id("home")).click();
+        // Esperamos un maximo de 10 segundos a que cargue la pagina principal
+        wait.until(ExpectedConditions.titleContains("Votacion mejor jugador liga ACB"));
+
+        // Pulsamos sobre el botón "Ver votos"
+        driver.findElement(By.id("ver")).click();
+
+        // Comprueba que el nuevo jugador aparece con 1 voto
+        boolean isPresent = driver.findElements(By.xpath("//td[contains(text(), 'JugadorPrueba')]")).size() > 0;
+        assertTrue(isPresent, "El jugador no se encuentra o no tiene el voto esperado.");
+
+        // Cerrar el navegador
         driver.close();
         driver.quit();
     }
